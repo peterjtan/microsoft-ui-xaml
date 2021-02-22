@@ -1608,7 +1608,7 @@ void NavigationView::ClosePane()
         });
     m_isOpenPaneForInteraction = true;
     IsPaneOpen(false); // the SplitView is two-way bound to this value
-    UnsetShadow();
+    //UnsetShadow();
 }
 
 // Call this when NavigationView itself is going to trigger a close
@@ -1646,6 +1646,8 @@ void NavigationView::OnSplitViewClosedCompactChanged(const winrt::DependencyObje
 void NavigationView::OnSplitViewPaneClosed(const winrt::DependencyObject& /*sender*/, const winrt::IInspectable& obj)
 {
     m_paneClosedEventSource(*this, nullptr);
+
+    UnsetShadow(); // Shadow is unset here only after the pane has closed
 }
 
 void NavigationView::OnSplitViewPaneClosing(const winrt::DependencyObject& /*sender*/, const winrt::SplitViewPaneClosingEventArgs& args)
@@ -4706,12 +4708,11 @@ void NavigationView::SetShadow()
 {
     if (SharedHelpers::IsThemeShadowAvailable())
     {
-        const winrt::Canvas shadowCaster = GetTemplateChildT<winrt::Canvas>(L"ShadowCaster", *this);
+        const winrt::Grid shadowCaster = GetTemplateChildT<winrt::Grid>(L"ShadowCaster", *this);
         const auto splitView = m_rootSplitView.get();
 
         if (DisplayMode() == winrt::NavigationViewDisplayMode::Compact)
         {
-
             if (shadowCaster)
             {
                 shadowCaster.Shadow(winrt::ThemeShadow{});
@@ -4732,7 +4733,7 @@ void NavigationView::UnsetShadow()
 {
     if (SharedHelpers::IsThemeShadowAvailable())
     {
-        const winrt::Canvas shadowCaster = GetTemplateChildT<winrt::Canvas>(L"ShadowCaster", *this);
+        const winrt::Grid shadowCaster = GetTemplateChildT<winrt::Grid>(L"ShadowCaster", *this);
         const auto splitView = m_rootSplitView.get();
 
         if (shadowCaster.Shadow())
